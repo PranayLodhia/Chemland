@@ -1,0 +1,15 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-family: "Times New Roman";
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);
+}

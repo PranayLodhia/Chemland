@@ -1,0 +1,37 @@
+<body><div id="3dmolviewer_16672989732557514" style="position: relative; width: 640px; height: 480px">
+
+        <canvas id="undefined" width="1600" height="1200" style="width: 640px; height: 480px; padding: 0px; position: absolute; top: 0px; left: 0px; z-index: 0;"></canvas></div>
+<script src="https://cdn.jsdelivr.net/npm/3dmol@latest/build/3Dmol-min.min.js" async=""></script><script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+      resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdn.jsdelivr.net/npm/3dmol@latest/build/3Dmol-min.min.js');
+}
+
+var viewer_16672989732557514 = null;
+var warn = document.getElementById("3dmolwarning_16672989732557514");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+viewer_16672989732557514 = $3Dmol.createViewer($("#3dmolviewer_16672989732557514"),{backgroundColor:"white"});
+$3Dmol.download("cid:264", viewer_16672989732557514, {}, function() {
+viewer_16672989732557514.zoomTo();
+	viewer_16672989732557514.setStyle({"stick": {"radius": 0.1}, "sphere": {"scale": 0.3}});
+viewer_16672989732557514.render();
+})
+});
+</script></body>

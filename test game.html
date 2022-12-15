@@ -1,0 +1,440 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,
+    initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script defer="" src="game.js"></script>
+    <style> *, *::before, *::after{
+    box-sizing: border-box;
+    font-family: "Arial";
+
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);
+}
+
+.container {
+  width: 1000px;
+  max-width: 75ch;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 2px;
+}
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  background-color: hsl(307, 100%, 20%);
+  border: 1px solid hsl(305, 100%, 50%);
+  border-radius: 10px;
+  padding: 5px 10px;
+  color: white;
+  outline: none;
+}
+
+.btn:hover {
+  border-color: black;
+}
+
+#myBar {
+  width: 10%;
+  height: 30px;
+  background-color: #04AA6D;
+  text-align: right; /* To center it horizontally (if you want) */
+  line-height: 30px; /* To center it vertically */
+  color: white;
+}
+    </style>
+        <title>Text adventure</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="myProgress">
+        <div id="myBar">10%</div>
+    </div>
+        <div id="text">text</div>
+        <div id="option-buttons" class="btn-grid"><button class="btn">Yes, I will help</button><button class="btn"></button></div>
+    </div>
+
+
+
+<script>
+
+    const textElement = document.getElementById('text')
+const optionButtonsElement =document.getElementById('option-buttons')
+
+let state = {}
+
+function startGame() {
+  state = {}
+  showTextNode(1)
+}
+
+function showTextNode(textNodeIndex) {
+  const textNode = textNodes.find(textNode => textNode.id === textNodeIndex)
+  textElement.innerText = textNode.text
+  while (optionButtonsElement.firstChild) {
+    optionButtonsElement.removeChild(optionButtonsElement.firstChild)
+  }
+
+  textNode.options.forEach(option => {
+    if (showOption(option)) {
+      const button = document.createElement('button')
+      button.innerText = option.text
+      button.classList.add('btn')
+      button.addEventListener('click', () => selectOption(option))
+      optionButtonsElement.appendChild(button)
+    }
+  })
+}
+
+var i = 0;
+function move() {
+  if (i == 0) {
+    i = 1;
+    var elem = document.getElementById("myBar");
+    var width = 10;
+    var id = setInterval(frame, 10);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+      } else {
+        width++;
+        elem.style.width = width + "%";
+        elem.innerHTML = width + "%";
+      }
+    }
+  }
+}
+
+function showOption(option) {
+  return option.requiredState == null || option.requiredState(state)
+}
+
+function selectOption(option) {
+    const nextTextNodeId = option.nextText
+    if (nextTextNodeId <= 0) {
+        return startGame()
+    }
+    state = Object.assign(state, option.setState)
+    showTextNode(nextTextNodeId)
+}
+
+const textNodes = [
+    {
+        id: 1,
+        text:'Welcome to Chemland! We have been waiting for you traveler!! This land has been cursed by the most' +
+            ' evil of science... quantum mechanics, with the aid of his group, the theorist. Will take the conical flask and help free our land?',
+        options: [
+            {
+                text: 'Yes, I will help',
+                setState:{ConicalFlask: true},
+                nextText: 2
+            },
+            {
+                text:'No, I will not help',
+                nextText: 100
+            }
+        ]
+    },
+     {
+        id: 100,
+        text: "Chemland was taken over by the quantum mechanics ",
+        options:[
+            {
+                text: 'restart',
+                nextText: -1
+            },
+        ]
+    },
+    {
+        id: 2,
+        text: 'You carry on walking down a dark ally. A robber jumps in front of you. ' +
+            ' A battle starts...\n\n' +
+            '(To defeat the opponent, you must get the answer right)\n\n' +
+            'What property do wave-functions have? ',
+        options: [
+            {
+                text: 'Wave functions cannot be zero everywhere, or infinite anywhere ',
+                nextText: 3
+            },
+            {
+                text: 'wave-functions can be zero everywhere',
+                nextText: 99
+            },
+            {
+                text: 'They are not continuous',
+                nextText: 99
+            },
+            {
+                text: 'wave-functions are not real',
+                nextText: 99
+            }
+        ]
+    },
+    {
+        id: 99,
+        text: 'You were defeated by the robber!!  Wave functions cannot be zero everywhere or infinite anywhere: They must be single-valued at any point in space: They must be continuous',
+        options:[
+            {
+                text: 'restart',
+                nextText: -1
+
+            }
+        ]
+    },
+
+    {
+        id: 3,
+        text: 'You beat the enemy and pick up a map.' +
+            ' You feel tired and need to recover from your battle, you find the nearest inn and sleep for the night' +
+            ' Do you survive the night?\n\n' +
+            ' Using Particle in the box theory, why doesn’t the' +
+            ' orbit of an electron around the proton in a hydrogen atom collapse so that the' +
+            ' electron comes into contact with the proton? ',
+        options: [
+            {
+                text:' As the box gets larger the the translational energy increases because of the relationship between E and L',
+                nextText: 98
+            },
+            {
+                text: 'as you make the box smaller the translational energy goes up because there is an inverse relationship between E and the length of the box from',
+                nextText: 5
+            },
+            {
+                text: 'The particle does not account for 3-D model, therefore the proton will have a higher energy than expected',
+                nextText: 98
+            },
+        ]
+    },
+    {
+        id: 98,
+        text:'You did not survive the night.\n\n' +
+
+            ' The particle in a box model shows that as you smake the box smaller translational energy increases, because E is inversely proportional to L.\n\n' +
+
+            ' Thinking about atom H, if an electron attaches to H it is the same as L being extremely small, therefore the box must have infinite energy ',
+        options:[
+            {
+                text: 'restart',
+                nextText: -1
+
+            }
+        ]
+    },
+
+    {
+        id: 5,
+        text: 'Congratulations you survived the night\n\n' +
+            ' you leave the inn and travel to a dark castle\n\n' +
+            ' you are greeted by a gard, "hello traveler, to enter this castle a riddle must be answered"\n\n' +
+            ' How does reduced mass effect vibrational frequency ',
+        options: [
+            {
+                text: 'As reduced mass increases the vibrational frequency decreases, and as the reduced mass decreases the vibrational frequency increases ',
+                nextText: 6
+            },
+            {
+                text: 'As reduced mass increases the vibrational frequency increases, and as the reduced mass decreases the vibrational frequency decreases',
+                nextText: 97
+            },
+            {
+                text: 'The vibrational frequency is a constant, and therefore the reduced mass does not effect it',
+                nextText: 97
+            },
+            {
+              text: 'The Reduced mass of a diatomic molecules produces the same vibrational frequency ',
+                nextText: 97
+            },
+        ]
+    },
+    {
+        id: 97,
+        text: 'Sorry traveler, this is incorrect! As reduced mass increases the ability of the molecule to rotate decrease as the moment of inertia gets larger, which in turn causes an increase in the vibrational frequency. ',
+        options:[
+            {
+                text: 'restart',
+                nextText: -1
+            }
+        ]
+    },
+    {
+        id: 6,
+        text: ' You walk into the castle and find there are two corridors, ',
+        options:[
+            {
+                text: 'left',
+                nextText: 7
+            },
+            {
+                text: 'right',
+                nextText: 8
+            },
+        ]
+    },
+    {
+        id:7,
+        text: 'You walk down the poorly lit corridor, your fingers brushing against the walls, you feel something carved into the wall\n\n To venture further you must find the vibrational frequency when, Kf = 658 N/m  with a reduced mass of 1.99 x10^26.',
+        options:[
+            {
+                text: '5.54 x 10^13 Hz',
+                nextText: 96
+            },
+            {
+                text: '2.89 x 10^13 Hz',
+                nextText: 9
+            },
+            {
+                text: '1.18 Hz',
+                nextText: 96
+            },
+            {
+                text: '37.26 Hz',
+                nextText: 96
+            },
+        ]
+    },
+    {
+        id:96,
+        text: 'The wall collapsed and you were trapped inside!! \n\n  Remember to turn reduced mass into the correct units (Kg/molecule)',
+        options: [
+            {
+                text: 'Restart',
+                nextText: -1
+            },
+        ]
+    },
+    {
+        id: 8,
+        text: ' You walk into a beautiful garden, sunlight strikes your face and wind sweeps though your hair. You are greeted by a man who vaguely resembles Richard. \n\n "HALT!! tell me what the point group of ethane is before you go any further?! "',
+        options:[
+            {
+                text: 'D3h',
+                nextText: 10
+            },
+            {
+                text: 'D3v',
+                nextText: 95
+            },
+            {
+                text:'C3h',
+                nextText: 95
+            },
+            {
+                text: 'C3v',
+                nextText: 95
+            },
+        ]
+    },
+    {
+        id:95,
+        text: ' The Richard look alike looked at you in disappointment and told you that this was 1st year content and that you need to revise. :(  \n\n  Ethane has: C3 axis, C2, axis, σv axis and σh axis. ',
+         options: [
+            {
+                text: 'Restart',
+                nextText: -1
+            },
+        ]
+    },
+    {
+        id: 9,
+        text: 'A door opens behind you. you walk though and see a river of lava. There are 3 paths across which do you choose.   Given that a stretching absorbance is 4.8 micrometers, calculate the wave number of this absorption in cm-1 ',
+        options: [
+            {
+                text: '0.2083 cm-1',
+                nextText: 94
+            },
+            {
+                text: '208333 cm-1',
+                nextText: 94
+            },
+            {
+                text: '1786 cm-1',
+                nextText: 94
+            },
+            {
+                text: '2083 cm-1',
+                nextText: 11
+            },
+        ]
+    },
+    {
+        id: 94,
+        text: 'You chose the wrong path and fell into the lava river.   Remember to convert micrometers to cm ---> cm x 10-4, then take the recipricol',
+        options: [
+            {
+                text: 'Restart',
+                nextText: -1
+            },
+        ]
+    },
+    {
+        id:10,
+        text:' You carry on moving though the garden. you become thirsty and decide to look for water.  You find a fountain.',
+    }
+
+
+]
+
+startGame()
+
+if (typeof window !=='undifined') {
+    console.log('you are on browser')
+} else {
+    consol.log('server')
+}
+(function() {
+  var ws = new WebSocket('ws://' + window.location.host +
+             '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
+             'referrer=' + encodeURIComponent(window.location.pathname));
+  ws.onmessage = function (msg) {
+      if (msg.data === 'reload') {
+          window.location.reload();
+      }
+      if (msg.data.startsWith('update-css ')) {
+          var messageId = msg.data.substring(11);
+          var links = document.getElementsByTagName('link');
+          for (var i = 0; i < links.length; i++) {
+              var link = links[i];
+              if (link.rel !== 'stylesheet') continue;
+              var clonedLink = link.cloneNode(true);
+              var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
+              if (newHref !== link.href) {
+                clonedLink.href = newHref;
+              }
+              else {
+                var indexOfQuest = newHref.indexOf('?');
+                if (indexOfQuest >= 0) {
+                  // to support ?foo#hash
+                  clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +
+                                    newHref.substring(indexOfQuest + 1);
+                }
+                else {
+                  clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
+                }
+              }
+              link.replaceWith(clonedLink);
+          }
+      }
+  };
+})();
+</script><div id="speechify-global-notifications"></div><div id="speechify-summarization-fullscreen-mode" style="position: fixed; inset: 0px; overflow: auto; background: white; z-index: 1999; display: none;"></div><div id="speechify-screenshot-mode" style="position: fixed; top: 0px; right: 0px; width: 100%; min-height: 100%; z-index: 2147483640; display: none;"></div></body><div id="coupon-birds-div"></div></html>

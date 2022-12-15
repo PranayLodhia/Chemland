@@ -1,0 +1,10 @@
+body {
+  height: 500px;
+  background: linear-gradient(to top right, #ff0066 0%, #00ccff 100%);
+}
+
+h1 {
+  color: black;
+  text-align: center;
+
+}
