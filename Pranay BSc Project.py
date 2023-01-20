@@ -176,8 +176,6 @@ tab1 = html.Div([
                 {'label': 'Example 2', 'value': worked_through_Example2},
                 {'label': 'Example 3', 'value': worked_through_Example3},
 
-
-
             ],
         ),
     html.Div(id='tab1-output'),
@@ -230,6 +228,13 @@ tab4=html.Div([
     ),
     html.Div(id="tab4_output"),
 ])
+tab5=html.Div([
+    html.H3(''),
+
+
+
+    html.Div(id="tab5_output"),
+    ]),
 
 
 app.layout = html.Div([
@@ -305,6 +310,13 @@ app.layout = html.Div([
                     {"label": "1,3,5-trimethylbenzene", "value":trimethylbenzene},
                     ]
                 )
+            ]),
+        dcc.Tab(
+            label='Refereance',
+            id='ref',
+            value="5",
+            children=[
+                tab5,
             ])
         ])
     ])
